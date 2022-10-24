@@ -1,9 +1,7 @@
 #include <iostream>
-#include <vector>
-#include <string>
+#include "board.h"
 
 using namespace std;
-
 
 
 int main(char **argv, int argc)
