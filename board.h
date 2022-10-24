@@ -13,10 +13,11 @@ private:
     // n represents the number of columns and rows
     // and thus the board will be square
     int n;
-    int pos[][];
+    int** pos;
+    static std::list<Board> history();
 public:
     Board(int n);
-    Board(int n, const string& customBoard);
+    Board(int n, const std::string& customBoard);
     bool operator==(const Board& rhs) const;
     bool isSolved() const;
     bool moveBlankUp();
@@ -25,7 +26,7 @@ public:
     bool moveBlankLeft();
     // getters
     int getN() const;
-    int getPos(int x, int y) const;
+    int getPos(int y, int x) const;
     std::string toString() const;
 };
 #endif 

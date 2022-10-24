@@ -8,7 +8,9 @@ Board::Board(int n)
     this->n = n; // set the dimension of the board
     // default method board will just create
     int num = 1;
-    pos = int[n][n]; // n by n array as specified by the user
+    pos = new int*[n]; // n by n array as specified by the user
+    for (int i = 0; i < n; i++)
+        pos[i] = new int[n];
     for (int row = 0; row < n; row++)
     {
         for (int col = 0; col < n; col++)
@@ -25,18 +27,22 @@ Board::Board(int n)
 /// "num_1 num_2 ... num_(n^2 - 1) "
 /// ex (ignore quotes) for 3 by 3 board
 /// "1 3 4 5 6 8 2 7 "
-/// Does not check for duplicates other than making sure the numbers are between 1 and n^2 - 1, inclusive
+/// Does not check for duplicates other than making sure the numbers are between 1 and n^2 - 1, inclusive.
 /// @param n how many rows or columns
-/// @param customBoard a custom string representation of the board
+/// @param customBoard a custom string representation of the board (please append a space at the end)
 Board::Board(int n, const std::string &customBoard)
 {
     this->n = n;
-    int i = 0;
+    int s = 0;
+    pos = new int*[n]; // n by n array as specified by the user
+    for (int i = 0; i < n; i++)
+        pos[i] = new int[n];
     for (int row = 0; row < n; row++)
     {
         for (int col = 0; col < n; col++)
         {
-            int c = ((int)customBoard.at(i)) - 48;
+            std::string remaining = customBoard.substr(s);
+            
             if (c >= 1 || c <= 8)
                 pos[row][col] = c;
             else if (c == 0 || c == -16) // test for ASCII 0 or ' '
