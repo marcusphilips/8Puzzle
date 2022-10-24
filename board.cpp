@@ -42,14 +42,28 @@ Board::Board(int n, const std::string &customBoard)
         for (int col = 0; col < n; col++)
         {
             std::string remaining = customBoard.substr(s);
+            unsigned end = remaining.find(" ");
+            if (end == std::string::npos){
+                std::cout << "Invalid string input. Read documentation. Quitting." << std::endl;
+                exit(1);
+            }
+            int num = 0;
+            try{
+                num = std::stoi(remaining.substr(0, end));
+            }
+            catch(std::exception e){
+                std::cout << e.what() << std::endl;
+                std::cout << "Tried to parse <" << remaining.substr(0, end) << "> and failed. Quitting." 
+                    << std::endl;
+                exit(1)
+            }
+            s += end + 1;
             
-            if (c >= 1 || c <= 8)
-                pos[row][col] = c;
-            else if (c == 0 || c == -16) // test for ASCII 0 or ' '
-                pos[row][col] = 0;
+            if (num >= 1 || num <= n*n - 1){
+                pos[row][col] = num;}
             else
             {
-                std::cout << "Error: invalid character used <" << (char)(c + 48) << ">\n"
+                std::cout << "Error: invalid numeral used <" << num << ">\n"
                      << "Only numerals 1-8 or 0 or \' \' are valid for the the 8 Puzzle." << endl;
                 exit(1);
             }

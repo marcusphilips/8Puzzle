@@ -4,6 +4,7 @@
 #include <iostream>
 #include <list>
 #include <iterator>
+#include <exception>
 
 // Board represents n by n board with the 8 numbers and the one-blank piece
 // Blank piece will be 0
