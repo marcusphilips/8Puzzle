@@ -2,9 +2,10 @@
 #define BOARD_H
 #include <string>
 #include <iostream>
-#include <vector>
+#include <list>
+#include <iterator>
 
-// Board represents 3 by 3 board with the 8 numbers and the one-blank piece
+// Board represents n by n board with the 8 numbers and the one-blank piece
 // Blank piece will be 0
 class Board
 {
@@ -17,7 +18,7 @@ public:
     Board(int n);
     Board(int n, const string& customBoard);
     bool operator==(const Board& rhs) const;
-    bool isDone() const;
+    bool isSolved() const;
     bool moveBlankUp();
     bool moveBlankDown();
     bool moveBlankRight();
@@ -25,5 +26,6 @@ public:
     // getters
     int getN() const;
     int getPos(int x, int y) const;
+    std::string toString() const;
 };
 #endif 

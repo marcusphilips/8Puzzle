@@ -1,7 +1,8 @@
 #include "board.h"
-// Board represents 3 by 3 board with the 8 numbers and the one-blank piece
-// Blank piece will be 0
 
+/// @brief  Board represents n by n board with the 8 numbers and the one-blank piece
+/// Blank piece will be 0
+/// @param n 
 Board::Board(int n)
 {
     this->n = n; // set the dimension of the board
@@ -20,15 +21,20 @@ Board::Board(int n)
         }
     }
 }
-// the custom string input for the board the format should be precisely (ignore quotes)
-// "size num_1 num_2 ... num_(size^2 - 1)"
-// ex (ignore quotes)
-// "3 "
-Board::Board(const string &customBoard)
+/// @brief the custom string input for the board the format should be precisely (ignore quotes)
+/// "num_1 num_2 ... num_(n^2 - 1) "
+/// ex (ignore quotes) for 3 by 3 board
+/// "1 3 4 5 6 8 2 7 "
+/// Does not check for duplicates other than making sure the numbers are between 1 and n^2 - 1, inclusive
+/// @param n how many rows or columns
+/// @param customBoard a custom string representation of the board
+Board::Board(int n, const std::string &customBoard)
 {
-    for (int row = 0; row < 3; row++)
+    this->n = n;
+    int i = 0;
+    for (int row = 0; row < n; row++)
     {
-        for (int col = 0; col < 3; col++)
+        for (int col = 0; col < n; col++)
         {
             int c = ((int)customBoard.at(i)) - 48;
             if (c >= 1 || c <= 8)
@@ -44,6 +50,16 @@ Board::Board(const string &customBoard)
         }
     }
 }
-Board::operator==(const Board& rhs) const {
-    for ()
+/// @brief Checks whether two boards are in equivalent states. Does not check size. That should be left to the user.
+/// @param rhs 
+/// @return bool
+bool Board::operator==(const Board& rhs) const {
+    for (int row = 0; row < n; row++){
+        for (int col; col < n; col++){
+            if (pos[row][col] != rhs.getPos(row, col)){
+                return false;
+            }
+        }
+    }
+    return true;
 }
