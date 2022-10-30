@@ -55,7 +55,7 @@ Board::Board(int n, const std::string &customBoard)
                 std::cout << e.what() << std::endl;
                 std::cout << "Tried to parse <" << remaining.substr(0, end) << "> and failed. Quitting." 
                     << std::endl;
-                exit(1)
+                exit(1);
             }
             s += end + 1;
             
@@ -78,6 +78,46 @@ bool Board::operator==(const Board& rhs) const {
         for (int col; col < n; col++){
             if (pos[row][col] != rhs.getPos(row, col)){
                 return false;
+            }
+        }
+    }
+    return true;
+}
+
+std::string Board::toString() const {
+    std::string acc = "";
+    for (int row = 0; row < n; row++){
+        for (int col = 0; col < n; col++){
+            acc += pos[row][col] + " ";
+        }
+        acc += "\n";
+    }
+}
+
+/// @brief Returns the integer of the position given. 0 if it is the blank. 
+/// Does not check out of bounds.
+/// @param y the row
+/// @param x the col
+/// @return the number at the position
+int Board::getPos(int y, int x) const {
+    return pos[y][x];
+}
+
+bool Board::isSolved() const {
+    int count = 1;
+    for (int row = 0; row < n; row++){
+        for (int col = 0; col < n; col++){
+            if (row == n - 1 && col == n - 1){
+                if (pos[row][col] != 0){
+                    return false;}}
+            else {
+                if (pos[row][col] != count)
+                {
+                    return false;
+                }
+                else{
+                    count++;
+                }
             }
         }
     }

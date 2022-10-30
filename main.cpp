@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 #include "board.h"
 
 using namespace std;
