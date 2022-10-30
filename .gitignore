@@ -1,1 +1,6 @@
 .vscode/
+Makefile
+lcs
+CMakeCache.txt
+*.cmake
+CMakeFiles/
