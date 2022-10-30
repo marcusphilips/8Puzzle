@@ -1,12 +1,12 @@
 #include "board.h"
 
-/// @brief  Board represents n by n board with the 8 numbers and the one-blank piece
+/// @brief  Board represents n by n board with the n*n - 1 numbers and the one-blank piece
 /// Blank piece will be 0
 /// @param n
 Board::Board(int n)
 {
     this->n = n; // set the dimension of the board
-    // default method board will just create
+    // default method board will just create the solved board
     int num = 1;
     pos = new int *[n]; // n by n array as specified by the user
     for (int i = 0; i < n; i++)
@@ -17,17 +17,23 @@ Board::Board(int n)
         {
             if (num != 9)
                 pos[row][col] = num;
-            else
+            else{
                 pos[row][col] = 0;
+                blankPos = new int[2];
+                blankPos[0] = row;
+                blankPos[1] = col;
+            }
             num++;
         }
     }
 }
+
 /// @brief the custom string input for the board the format should be precisely (ignore quotes)
-/// "num_1 num_2 ... num_(n^2 - 1) "
+/// "num_1 num_2 ... num_(n^2 - 1) 0"
 /// ex (ignore quotes) for 3 by 3 board
 /// "1 3 4 5 6 8 2 7 "
 /// Does not check for duplicates other than making sure the numbers are between 1 and n^2 - 1, inclusive.
+/// Use 0 to indicate the blank spot
 /// @param n how many rows or columns
 /// @param customBoard a custom string representation of the board (please append a space at the end)
 Board::Board(int n, const std::string &customBoard)
@@ -66,15 +72,22 @@ Board::Board(int n, const std::string &customBoard)
             {
                 pos[row][col] = num;
             }
+            else if (num == 0){
+                pos[row][col] = 0;
+                blankPos = new int[2];
+                blankPos[0] = row;
+                blankPos[1] = col;
+            }
             else
             {
                 std::cout << "Error: invalid numeral used <" << num << ">\n"
-                          << "Only numerals 1-8 or 0 or \' \' are valid for the the 8 Puzzle." << std::endl;
+                          << "Only numerals 1-(n*n-1) or 0 are valid for the the 8 Puzzle." << std::endl;
                 exit(1);
             }
         }
     }
 }
+
 /// @brief Checks whether two boards are in equivalent states. Does not check size. That should be left to the user.
 /// @param rhs
 /// @return bool
@@ -82,7 +95,7 @@ bool Board::operator==(const Board &rhs) const
 {
     for (int row = 0; row < n; row++)
     {
-        for (int col; col < n; col++)
+        for (int col = 0; col < n; col++)
         {
             if (pos[row][col] != rhs.getPos(row, col))
             {
@@ -93,6 +106,8 @@ bool Board::operator==(const Board &rhs) const
     return true;
 }
 
+/// @brief Gives a string representation of the board
+/// @return a string representation of the board
 std::string Board::toString() const
 {
     std::string acc = "";
@@ -116,6 +131,8 @@ int Board::getPos(int y, int x) const
     return pos[y][x];
 }
 
+/// @brief Is this current board solved?
+/// @return a bool indicating whether the Board has been solved
 bool Board::isSolved() const
 {
     int count = 1;
@@ -144,4 +161,49 @@ bool Board::isSolved() const
         }
     }
     return true;
+}
+
+/// @brief what is the length or the width (the same since it's a square) of the board
+/// @return an integer 
+int Board::getN() const {
+    return n;
+}
+
+/// @brief attempts to move Blank up
+/// @return bool did it actually move the blank up
+bool Board::moveBlankUp() {
+    if (blankPos[0] == 0) // if row is 0
+        return false;
+    else{
+        pos[blankPos[0]][blankPos[1]] = pos[blankPos[0] - 1][blankPos[1]];
+        pos[blankPos[0] - 1][blankPos[1]] = 0;
+        blankPos[0] = blankPos[0] - 1;
+        return true;
+    }
+}
+
+/// @brief attempts to move blank down
+/// @return bool did it actually move the blank down
+bool Board::moveBlankDown() {
+    if (blankPos[0] == n - 1) // if row is n -1
+        return false;
+    else{
+        pos[blankPos[0]][blankPos[1]] = pos[blankPos[0] + 1][blankPos[1]];
+        pos[blankPos[0] + 1][blankPos[1]] = 0;
+        blankPos[0] = blankPos[0] + 1;
+        return true;
+    }
+}
+
+/// @brief attempts to move blank down
+/// @return bool did it actually move the blank down
+bool Board::moveBlankRight(){
+    if (blankPos[1] == n - 1) // if col is n -1
+        return false;
+    else{
+        pos[blankPos[0]][blankPos[1]] = pos[blankPos[0]][blankPos[1]+ 1];
+        pos[blankPos[0] + 1][blankPos[1]] = 0;
+        blankPos[0] = blankPos[0] + 1;
+        return true;
+    }
 }

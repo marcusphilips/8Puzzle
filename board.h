@@ -6,15 +6,19 @@
 #include <iterator>
 #include <exception>
 
-// Board represents n by n board with the 8 numbers and the one-blank piece
-// Blank piece will be 0
+/// @brief Board represents n by n board with the 8 numbers and the one-blank piece
+/// Blank piece will be 0
 class Board
 {
 private:
     // n represents the number of columns and rows
     // and thus the board will be square
     int n;
+    /// @brief A 2D array representation of the board
     int** pos;
+    /// @brief easier to keep track of the blank position rather than constantly trying to search
+    /// for it
+    int* blankPos;
     static std::list<Board> history();
 public:
     Board(int n);
