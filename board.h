@@ -6,7 +6,7 @@
 #include <list>
 #include <iterator>
 #include <exception>
-
+#include <algorithm>
 
 /// @brief Board represents n by n board with the 8 numbers and the one-blank piece
 /// Blank piece will be 0
@@ -22,6 +22,7 @@ private:
     /// for it
     int* blankPos;
     static std::list<Board> history();
+    bool operator<(const Board& rhs) const;
 public:
     Board(int n);
     Board(int n, const std::string& customBoard);
@@ -38,5 +39,8 @@ public:
     int getN() const;
     int getPos(int y, int x) const;
     std::string toString() const;
+    // add history
+    void addThis();
+    bool isInHistory() const;
 };
 #endif 

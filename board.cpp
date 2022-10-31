@@ -17,7 +17,8 @@ Board::Board(int n)
         {
             if (num != 9)
                 pos[row][col] = num;
-            else{
+            else
+            {
                 pos[row][col] = 0;
                 blankPos = new int[2];
                 blankPos[0] = row;
@@ -72,7 +73,8 @@ Board::Board(int n, const std::string &customBoard)
             {
                 pos[row][col] = num;
             }
-            else if (num == 0){
+            else if (num == 0)
+            {
                 pos[row][col] = 0;
                 blankPos = new int[2];
                 blankPos[0] = row;
@@ -166,17 +168,20 @@ bool Board::isSolved() const
 }
 
 /// @brief what is the length or the width (the same since it's a square) of the board
-/// @return an integer 
-int Board::getN() const {
+/// @return an integer
+int Board::getN() const
+{
     return n;
 }
 
 /// @brief attempts to move Blank up
 /// @return bool did it actually move the blank up
-bool Board::moveBlankUp() {
+bool Board::moveBlankUp()
+{
     if (blankPos[0] == 0) // if row is 0
         return false;
-    else{
+    else
+    {
         pos[blankPos[0]][blankPos[1]] = pos[blankPos[0] - 1][blankPos[1]];
         pos[blankPos[0] - 1][blankPos[1]] = 0;
         blankPos[0] = blankPos[0] - 1;
@@ -186,10 +191,12 @@ bool Board::moveBlankUp() {
 
 /// @brief attempts to move blank down
 /// @return bool did it actually move the blank down
-bool Board::moveBlankDown() {
+bool Board::moveBlankDown()
+{
     if (blankPos[0] == n - 1) // if row is n -1
         return false;
-    else{
+    else
+    {
         pos[blankPos[0]][blankPos[1]] = pos[blankPos[0] + 1][blankPos[1]];
         pos[blankPos[0] + 1][blankPos[1]] = 0;
         blankPos[0] = blankPos[0] + 1;
@@ -199,10 +206,12 @@ bool Board::moveBlankDown() {
 
 /// @brief attempts to move blank down
 /// @return bool did it actually move the blank down
-bool Board::moveBlankRight(){
+bool Board::moveBlankRight()
+{
     if (blankPos[1] == n - 1) // if col is n -1
         return false;
-    else{
+    else
+    {
         pos[blankPos[0]][blankPos[1]] = pos[blankPos[0]][blankPos[1] + 1];
         pos[blankPos[0]][blankPos[1] + 1] = 0;
         blankPos[1] = blankPos[1] + 1;
@@ -212,10 +221,12 @@ bool Board::moveBlankRight(){
 
 /// @brief attempts to move blank left
 /// @return bool did it actually move the blank left
-bool Board::moveBlankLeft(){
+bool Board::moveBlankLeft()
+{
     if (blankPos[1] == 0) // if col is n -1
         return false;
-    else{
+    else
+    {
         pos[blankPos[0]][blankPos[1]] = pos[blankPos[0]][blankPos[1] - 1];
         pos[blankPos[0]][blankPos[1] - 1] = 0;
         blankPos[1] = blankPos[1] - 1;
@@ -226,8 +237,10 @@ bool Board::moveBlankLeft(){
 // this is my punishment for using dynamically allocated arrays
 
 /// @brief deallocator
-Board::~Board() {
-    for (int row = 0; row < n; row++){
+Board::~Board()
+{
+    for (int row = 0; row < n; row++)
+    {
         delete[] pos[row];
     }
     delete[] pos;
@@ -236,16 +249,20 @@ Board::~Board() {
 
 /// @brief Copy constructor
 /// @param b Board
-Board::Board(const Board& b){
+Board::Board(const Board &b)
+{
     this->n = b.getN();
     pos = new int *[n]; // n by n array as specified by the user
     blankPos = new int[2];
     for (int i = 0; i < n; i++)
         pos[i] = new int[n];
-    for (int row = 0; row < n; row++){
-        for (int col = 0; col < n; col++){
+    for (int row = 0; row < n; row++)
+    {
+        for (int col = 0; col < n; col++)
+        {
             pos[row][col] = b.getPos(row, col);
-            if (pos[row][col] == 0){
+            if (pos[row][col] == 0)
+            {
                 blankPos[0] = row;
                 blankPos[1] = col;
             }
@@ -253,14 +270,16 @@ Board::Board(const Board& b){
     }
 }
 
-/// @brief assignment operator 
+/// @brief assignment operator
 /// @param rhs another Board
 /// @return the Board equal to rhs
-Board& Board::operator=(const Board& rhs){
+Board &Board::operator=(const Board &rhs)
+{
     if (this == &rhs)
         return *this;
-    
-    for (int row = 0; row < n; row++){
+
+    for (int row = 0; row < n; row++)
+    {
         delete[] pos[row];
     }
     delete[] pos;
@@ -268,14 +287,47 @@ Board& Board::operator=(const Board& rhs){
     pos = new int *[n]; // n by n array as specified by the user
     for (int i = 0; i < n; i++)
         pos[i] = new int[n];
-    for (int row = 0; row < n; row++){
-        for (int col = 0; col < n; col++){
+    for (int row = 0; row < n; row++)
+    {
+        for (int col = 0; col < n; col++)
+        {
             pos[row][col] = rhs.getPos(row, col);
-            if (pos[row][col] == 0){
+            if (pos[row][col] == 0)
+            {
                 blankPos[0] = row;
                 blankPos[1] = col;
             }
         }
     }
     return *this;
+}
+
+/// @brief Compares wheter this is less than rhs. Assumes the comparisons are on boards of
+/// equivalent size, n.
+/// @param rhs another Board object to compare to
+/// @return a bool on whether this Board object is less than rhs
+bool Board::operator<(const Board &rhs) const
+{
+    for (int row = 0; row < n; row++)
+    {
+        for (int col = 0; col < n; col++)
+        {
+            if (pos[row][col] < rhs.getPos(row, col))
+                return true;
+            else if (pos[row][col] > rhs.getPos(row, col))
+                return false;
+            // else continue comparing
+        }
+    }
+    // basically the boards are equal and thus not less than
+    return false;
+}
+
+/// @brief Add this Board object to the history of all boards. But in a sorted way to save time
+void Board::addThis()
+{
+}
+
+bool Board::isInHistory() const
+{
 }
