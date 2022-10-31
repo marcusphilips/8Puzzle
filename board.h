@@ -23,6 +23,9 @@ private:
 public:
     Board(int n);
     Board(int n, const std::string& customBoard);
+    ~Board();
+    Board(const Board& b);
+    Board& operator=(const Board& rhs);
     bool operator==(const Board& rhs) const;
     bool isSolved() const;
     bool moveBlankUp();

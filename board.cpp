@@ -201,9 +201,56 @@ bool Board::moveBlankRight(){
     if (blankPos[1] == n - 1) // if col is n -1
         return false;
     else{
-        pos[blankPos[0]][blankPos[1]] = pos[blankPos[0]][blankPos[1]+ 1];
-        pos[blankPos[0] + 1][blankPos[1]] = 0;
-        blankPos[0] = blankPos[0] + 1;
+        pos[blankPos[0]][blankPos[1]] = pos[blankPos[0]][blankPos[1] + 1];
+        pos[blankPos[0]][blankPos[1] + 1] = 0;
+        blankPos[1] = blankPos[1] + 1;
         return true;
     }
+}
+
+/// @brief attempts to move blank left
+/// @return bool did it actually move the blank left
+bool Board::moveBlankLeft(){
+    if (blankPos[1] == 0) // if col is n -1
+        return false;
+    else{
+        pos[blankPos[0]][blankPos[1]] = pos[blankPos[0]][blankPos[1] - 1];
+        pos[blankPos[0]][blankPos[1] - 1] = 0;
+        blankPos[1] = blankPos[1] - 1;
+        return true;
+    }
+}
+
+// this is my punishment for using dynamically allocated arrays
+
+/// @brief deallocator
+Board::~Board() {
+    for (int row = 0; row < n; row++){
+        delete[] pos[row];
+    }
+    delete[] pos;
+    delete[] blankPos;
+}
+
+/// @brief Copy constructor
+/// @param b Board
+Board::Board(const Board& b){
+    this->n = b.getN();
+    pos = new int *[n]; // n by n array as specified by the user
+    blankPos = new int[2];
+    for (int i = 0; i < n; i++)
+        pos[i] = new int[n];
+    for (int row = 0; row < n; row++){
+        for (int col = 0; col < n; col++){
+            pos[row][col] = b.getPos(row, col);
+            if (pos[row][col] == 0){
+                blankPos[0] = row;
+                blankPos[1] = col;
+            }
+        }
+    }
+}
+
+Board& Board::operator=(const Board& rhs){
+
 }
