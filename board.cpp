@@ -31,7 +31,7 @@ Board::Board(int n)
 /// @brief the custom string input for the board the format should be precisely (ignore quotes)
 /// "num_1 num_2 ... num_(n^2 - 1) 0"
 /// ex (ignore quotes) for 3 by 3 board
-/// "1 3 4 5 6 8 2 7 "
+/// "1 3 4 5 6 8 2 7 0 "
 /// Does not check for duplicates other than making sure the numbers are between 1 and n^2 - 1, inclusive.
 /// Use 0 to indicate the blank spot
 /// @param n how many rows or columns
@@ -68,7 +68,7 @@ Board::Board(int n, const std::string &customBoard)
             }
             s += end + 1;
 
-            if (num >= 1 || num <= n * n - 1)
+            if (num >= 1 && num <= n * n - 1)
             {
                 pos[row][col] = num;
             }
@@ -110,15 +110,17 @@ bool Board::operator==(const Board &rhs) const
 /// @return a string representation of the board
 std::string Board::toString() const
 {
-    std::string acc = "";
+    std::string acc;
     for (int row = 0; row < n; row++)
     {
         for (int col = 0; col < n; col++)
         {
-            acc += pos[row][col] + " ";
+            acc.append(std::to_string(pos[row][col]));
+            acc.push_back(' ');
         }
-        acc += "\n";
+        acc.push_back('\n');
     }
+    return acc;
 }
 
 /// @brief Returns the integer of the position given. 0 if it is the blank.
@@ -251,6 +253,29 @@ Board::Board(const Board& b){
     }
 }
 
+/// @brief assignment operator 
+/// @param rhs another Board
+/// @return the Board equal to rhs
 Board& Board::operator=(const Board& rhs){
-
+    if (this == &rhs)
+        return *this;
+    
+    for (int row = 0; row < n; row++){
+        delete[] pos[row];
+    }
+    delete[] pos;
+    this->n = rhs.getN();
+    pos = new int *[n]; // n by n array as specified by the user
+    for (int i = 0; i < n; i++)
+        pos[i] = new int[n];
+    for (int row = 0; row < n; row++){
+        for (int col = 0; col < n; col++){
+            pos[row][col] = rhs.getPos(row, col);
+            if (pos[row][col] == 0){
+                blankPos[0] = row;
+                blankPos[1] = col;
+            }
+        }
+    }
+    return *this;
 }

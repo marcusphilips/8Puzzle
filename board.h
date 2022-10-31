@@ -1,10 +1,12 @@
 #ifndef BOARD_H
 #define BOARD_H
 #include <string>
+#include <vector>
 #include <iostream>
 #include <list>
 #include <iterator>
 #include <exception>
+
 
 /// @brief Board represents n by n board with the 8 numbers and the one-blank piece
 /// Blank piece will be 0
