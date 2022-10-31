@@ -45,4 +45,5 @@ public:
     bool isInHistory() const;
     void printHistory() const;
 };
+
 #endif 

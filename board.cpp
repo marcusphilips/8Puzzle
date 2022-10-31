@@ -1,5 +1,7 @@
 #include "board.h"
 
+std::list<Board> Board::history = std::list<Board> ();
+
 /// @brief  Board represents n by n board with the n*n - 1 numbers and the one-blank piece
 /// Blank piece will be 0
 /// @param n
@@ -190,7 +192,7 @@ Board *Board::moveBlankUp()
 }
 
 /// @brief attempts to move blank down
-/// @return bool did it actually move the blank down
+/// @return Board pointer it actually move the blank down
 Board *Board::moveBlankDown()
 {
     if (blankPos[0] == n - 1) // if row is n -1
@@ -204,7 +206,7 @@ Board *Board::moveBlankDown()
 }
 
 /// @brief attempts to move blank down
-/// @return bool did it actually move the blank down
+/// @return Board pointer it actually move the blank down
 Board *Board::moveBlankRight()
 {
     if (blankPos[1] == n - 1) // if col is n -1
@@ -219,7 +221,7 @@ Board *Board::moveBlankRight()
 }
 
 /// @brief attempts to move blank left
-/// @return bool did it actually move the blank left
+/// @return Board pointer did it actually move the blank left
 Board *Board::moveBlankLeft()
 {
     if (blankPos[1] == 0) // if col is n -1
@@ -327,6 +329,7 @@ bool Board::operator<(const Board &rhs) const
 void Board::addThis()
 {
     std::list<Board>::iterator it;
+    std::cout << history.size() << std::endl;
     it = std::lower_bound(history.begin(), history.end(), *this);
     history.insert(it, *this);
 }

@@ -2,6 +2,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 
 project(8Puzzle)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 ADD_EXECUTABLE(out
     board.cpp
 	main.cpp
