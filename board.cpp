@@ -175,63 +175,62 @@ int Board::getN() const
 }
 
 /// @brief attempts to move Blank up
-/// @return bool did it actually move the blank up
-bool Board::moveBlankUp()
+/// @return board pointer did it actually move the blank up null pointer if not
+Board *Board::moveBlankUp()
 {
+
     if (blankPos[0] == 0) // if row is 0
-        return false;
-    else
-    {
-        pos[blankPos[0]][blankPos[1]] = pos[blankPos[0] - 1][blankPos[1]];
-        pos[blankPos[0] - 1][blankPos[1]] = 0;
-        blankPos[0] = blankPos[0] - 1;
-        return true;
-    }
+        return nullptr;
+    Board *b = new Board(*this);
+    b->pos[b->blankPos[0]][b->blankPos[1]] = b->pos[b->blankPos[0] - 1][b->blankPos[1]];
+    b->pos[b->blankPos[0] - 1][b->blankPos[1]] = 0;
+    b->blankPos[0] = b->blankPos[0] - 1;
+    b->parentNode = this;
+    return b;
 }
 
 /// @brief attempts to move blank down
 /// @return bool did it actually move the blank down
-bool Board::moveBlankDown()
+Board *Board::moveBlankDown()
 {
     if (blankPos[0] == n - 1) // if row is n -1
-        return false;
-    else
-    {
-        pos[blankPos[0]][blankPos[1]] = pos[blankPos[0] + 1][blankPos[1]];
-        pos[blankPos[0] + 1][blankPos[1]] = 0;
-        blankPos[0] = blankPos[0] + 1;
-        return true;
-    }
+        return nullptr;
+    Board *b = new Board(*this);
+    b->pos[b->blankPos[0]][b->blankPos[1]] = b->pos[b->blankPos[0] + 1][b->blankPos[1]];
+    b->pos[b->blankPos[0] + 1][b->blankPos[1]] = 0;
+    b->blankPos[0] = b->blankPos[0] + 1;
+     b->parentNode = this;
+    return b;
 }
 
 /// @brief attempts to move blank down
 /// @return bool did it actually move the blank down
-bool Board::moveBlankRight()
+Board *Board::moveBlankRight()
 {
     if (blankPos[1] == n - 1) // if col is n -1
-        return false;
-    else
-    {
-        pos[blankPos[0]][blankPos[1]] = pos[blankPos[0]][blankPos[1] + 1];
-        pos[blankPos[0]][blankPos[1] + 1] = 0;
-        blankPos[1] = blankPos[1] + 1;
-        return true;
-    }
+        return nullptr;
+
+    Board *b = new Board(*this);
+    b->pos[b->blankPos[0]][b->blankPos[1]] = b->pos[b->blankPos[0]][b->blankPos[1] + 1];
+    b->pos[b->blankPos[0]][b->blankPos[1] + 1] = 0;
+    b->blankPos[1] = b->blankPos[1] + 1;
+     b->parentNode = this;
+    return b;
 }
 
 /// @brief attempts to move blank left
 /// @return bool did it actually move the blank left
-bool Board::moveBlankLeft()
+Board *Board::moveBlankLeft()
 {
     if (blankPos[1] == 0) // if col is n -1
-        return false;
-    else
-    {
-        pos[blankPos[0]][blankPos[1]] = pos[blankPos[0]][blankPos[1] - 1];
-        pos[blankPos[0]][blankPos[1] - 1] = 0;
-        blankPos[1] = blankPos[1] - 1;
-        return true;
-    }
+        return nullptr;
+
+    Board *b = new Board(*this);
+    b->pos[b->blankPos[0]][b->blankPos[1]] = b->pos[b->blankPos[0]][b->blankPos[1] - 1];
+    b->pos[b->blankPos[0]][b->blankPos[1] - 1] = 0;
+    b->blankPos[1] = b->blankPos[1] - 1;
+    b->parentNode = this;
+    return b;
 }
 
 // this is my punishment for using dynamically allocated arrays
@@ -252,6 +251,7 @@ Board::~Board()
 Board::Board(const Board &b)
 {
     this->n = b.getN();
+    this->parentNode = b.parentNode;
     pos = new int *[n]; // n by n array as specified by the user
     blankPos = new int[2];
     for (int i = 0; i < n; i++)
@@ -326,8 +326,26 @@ bool Board::operator<(const Board &rhs) const
 /// @brief Add this Board object to the history of all boards. But in a sorted way to save time
 void Board::addThis()
 {
+    std::list<Board>::iterator it;
+    it = std::lower_bound(history.begin(), history.end(), *this);
+    history.insert(it, *this);
 }
 
+/// @brief Has the Board already been recorded
+/// @return bool is the current Board in the history of the object
 bool Board::isInHistory() const
 {
+    std::list<Board>::iterator it;
+    it = std::lower_bound(history.begin(), history.end(), *this);
+    if (it != history.end())
+        return true;
+    else
+        return false;
+}
+
+/// @brief prints the history of the choices
+void Board::printHistory() const {
+    cout << toString() << endl;
+    if (parentNode != nullptr)
+        cout << parentNode->printHistory() << endl;
 }

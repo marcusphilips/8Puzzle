@@ -4,5 +4,6 @@ lcs
 CMakeCache.txt
 *.cmake
 CMakeFiles/
+build/
 out
 a.out

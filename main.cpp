@@ -4,12 +4,65 @@
 
 using namespace std;
 
-
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-    Board b = Board(3, "3 1 2 0 5 6 4 7 8 ");
+    Board *b = new Board(3, "3 1 2 0 5 6 4 7 8 ");
+    // Uniform Cost Search
+    queue<Board *> *q;
+    q->push(b);
+    while (true)
+    {
+        if (q->empty())
+        {
+            cout << "No solution found" << endl;
+        }
+        queue<Board *> *next = new queue<Board *>();
+        while (!q->empty())
+        {
+            if (q->front()->isSolved()){
+                cout << "Found solution" << endl;
+            }
+            Board *up = q->front()->moveBlankUp();
+            if (up != nullptr)
+            {
+                if (!up->isInHistory())
+                {
+                    next->push(up);
+                    up->addThis();
+                }
+            }
+            Board *down = q->front()->moveBlankDown();
+            if (down != nullptr)
+            {
+                if (!down->isInHistory())
+                {
+                    next->push(down);
+                    down->addThis();
+                }
+            }
+            Board *left = q->front()->moveBlankLeft();
+            if (left != nullptr)
+            {
+                if (!left->isInHistory())
+                {
+                    next->push(left);
+                    left->addThis();
+                }
+            }
+            Board *right = q->front()->moveBlankRight();
+            if (right != nullptr)
+            {
+                if (!right->isInHistory())
+                {
+                    next->push(right);
+                    right->addThis();
+                }
+            }
+            q->pop();
+        }
+    }
     // Testing basic operations
-    
+
     // Board other = b;
     // cout << b.toString() << endl;
     // b.moveBlankLeft();

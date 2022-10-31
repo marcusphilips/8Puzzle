@@ -21,8 +21,8 @@ private:
     /// @brief easier to keep track of the blank position rather than constantly trying to search
     /// for it
     int* blankPos;
-    static std::list<Board> history();
-    bool operator<(const Board& rhs) const;
+    Board* parentNode = nullptr;
+    static std::list<Board> history;
 public:
     Board(int n);
     Board(int n, const std::string& customBoard);
@@ -30,11 +30,12 @@ public:
     Board(const Board& b);
     Board& operator=(const Board& rhs);
     bool operator==(const Board& rhs) const;
+    bool operator<(const Board& rhs) const;
     bool isSolved() const;
-    bool moveBlankUp();
-    bool moveBlankDown();
-    bool moveBlankRight();
-    bool moveBlankLeft();
+    Board* moveBlankUp() ;
+    Board* moveBlankDown() ;
+    Board* moveBlankRight() ;
+    Board* moveBlankLeft() ;
     // getters
     int getN() const;
     int getPos(int y, int x) const;
@@ -42,5 +43,6 @@ public:
     // add history
     void addThis();
     bool isInHistory() const;
+    void printHistory() const;
 };
 #endif 
