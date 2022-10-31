@@ -20,7 +20,10 @@ int main(int argc, char **argv)
         while (!q->empty())
         {
             if (q->front()->isSolved()){
-                cout << "Found solution" << endl;
+                cout << "Found solution printing history:" << endl;
+                q->front()->printHistory();
+                cout << "Solution found. No more expansion." << endl;
+                goto OUTER_LOOP;
             }
             Board *up = q->front()->moveBlankUp();
             if (up != nullptr)
@@ -79,5 +82,5 @@ int main(int argc, char **argv)
     // cout << k.toString() << endl;
     // cout << other.toString() << endl;
 
-    return 0;
+    OUTER_LOOP:return 0;
 }

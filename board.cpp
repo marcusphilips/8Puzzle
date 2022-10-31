@@ -345,7 +345,7 @@ bool Board::isInHistory() const
 
 /// @brief prints the history of the choices
 void Board::printHistory() const {
-    cout << toString() << endl;
+    std::cout << toString() << std::endl;
     if (parentNode != nullptr)
-        cout << parentNode->printHistory() << endl;
+       parentNode->printHistory();
 }
