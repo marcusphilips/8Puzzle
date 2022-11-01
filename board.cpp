@@ -1,7 +1,9 @@
 #include "board.h"
 
 // some nonsense I need to do to use the static list
-std::list<Board> Board::history = std::list<Board> ();
+std::list<Board> Board::history = std::list<Board>();
+// other nonsense for the static board 1-Board will get overwritten by true n by n board
+Board Board::solvedBoard = Board(1);
 
 /// @brief  Board represents n by n board with the n*n - 1 numbers and the one-blank piece
 /// Blank piece will be 0
@@ -91,6 +93,8 @@ Board::Board(int n, const std::string &customBoard)
             }
         }
     }
+    // create a static solved board to compared for heuristics to save time and mem
+    solvedBoard = Board(n);
 }
 
 /// @brief Checks whether two boards are in equivalent states. Does not check size. That should be left to the user.
@@ -179,7 +183,7 @@ int Board::getN() const
 
 /// @brief attempts to move Blank up
 /// @return board pointer did it actually move the blank up null pointer if not
-Board *Board::moveBlankUp()
+Board *Board::moveBlankUp() 
 {
 
     if (blankPos[0] == 0) // if row is 0
@@ -189,6 +193,7 @@ Board *Board::moveBlankUp()
     b->pos[b->blankPos[0] - 1][b->blankPos[1]] = 0;
     b->blankPos[0] = b->blankPos[0] - 1;
     b->parentNode = this;
+    b->depth = depth + 1;
     return b;
 }
 
@@ -202,7 +207,8 @@ Board *Board::moveBlankDown()
     b->pos[b->blankPos[0]][b->blankPos[1]] = b->pos[b->blankPos[0] + 1][b->blankPos[1]];
     b->pos[b->blankPos[0] + 1][b->blankPos[1]] = 0;
     b->blankPos[0] = b->blankPos[0] + 1;
-     b->parentNode = this;
+    b->parentNode = this;
+    b->depth = depth + 1;
     return b;
 }
 
@@ -217,7 +223,8 @@ Board *Board::moveBlankRight()
     b->pos[b->blankPos[0]][b->blankPos[1]] = b->pos[b->blankPos[0]][b->blankPos[1] + 1];
     b->pos[b->blankPos[0]][b->blankPos[1] + 1] = 0;
     b->blankPos[1] = b->blankPos[1] + 1;
-     b->parentNode = this;
+    b->parentNode = this;
+    b->depth = depth + 1;
     return b;
 }
 
@@ -233,6 +240,7 @@ Board *Board::moveBlankLeft()
     b->pos[b->blankPos[0]][b->blankPos[1] - 1] = 0;
     b->blankPos[1] = b->blankPos[1] - 1;
     b->parentNode = this;
+    b->depth = depth + 1;
     return b;
 }
 
@@ -286,8 +294,12 @@ Board &Board::operator=(const Board &rhs)
         delete[] pos[row];
     }
     delete[] pos;
+    delete[] blankPos;
+
     this->n = rhs.getN();
     pos = new int *[n]; // n by n array as specified by the user
+    blankPos = new int[2];
+
     for (int i = 0; i < n; i++)
         pos[i] = new int[n];
     for (int row = 0; row < n; row++)
@@ -326,20 +338,28 @@ bool Board::operator<(const Board &rhs) const
     return false;
 }
 
+/// @brief Is LHS cost less than rhs?
+/// @param rhs another Board whose cost has beeen calculated
+/// @return bool whether the LHS's cost is less than RHS's
+bool Board::costLessThan(const Board &rhs) const{
+    return cost < rhs.cost;
+}
+
 /// @brief Add this Board object to the history of all boards. But in a sorted way to save time
 void Board::addThis()
 {
     std::list<Board>::iterator it;
     it = std::lower_bound(history.begin(), history.end(), *this);
     history.insert(it, *this);
-    //std::cout << "New history size: " << history.size() << std::endl;
+    // std::cout << "New history size: " << history.size() << std::endl;
 }
 
 /// @brief Has the Board already been recorded
 /// @return bool is the current Board in the history of the object
 bool Board::isInHistory() const
 {
-    for(std::list<Board>::iterator it = history.begin(); it != history.end(); it++){
+    for (std::list<Board>::iterator it = history.begin(); it != history.end(); it++)
+    {
         if (*it == *this)
             return true;
     }
@@ -347,26 +367,41 @@ bool Board::isInHistory() const
 }
 
 /// @brief prints the history of the choices
-void Board::printHistory() const {
-    std::cout << "Board is at depth " << countDepth() << std::endl;
-    std::cout << toString() << std::endl;
-    if (parentNode != nullptr)
-       parentNode->printHistory();
+void Board::printHistory() const
+{
+    std::cout << "Board is at depth " << depth << std::endl;
+    printHistoryHelper();
 }
 
-/// @brief How deep are we? Uses some nice recursion
-/// @return 1 for every null parent node i.e. the depth
-int Board::countDepth() const {
-    if (parentNode == nullptr)
-        return 0;
-    else
-        return 1 + parentNode->countDepth();
+/// @brief Private helper function for the public function
+void Board::printHistoryHelper() const
+{
+    std::cout << toString() << std::endl;
+    if (parentNode != nullptr)
+        parentNode->printHistoryHelper();
 }
 
 /// @brief Clears the history to start over fresh for a new board. Should remove memory leaks; actually
 /// do not mind the memory leaks. They are trivial.
-void Board::clearHistory() {
-    while (!history.empty()){
+void Board::clearHistory()
+{
+    while (!history.empty())
+    {
         history.pop_back();
     }
+}
+
+/// @brief Calculates the heuristic with misplaced cost and also counts the depth to see how far the
+/// Board went to calculate for the total cost which the Board object will store
+void Board::misplacedCost() 
+{
+    // find h(n) which is equivalent to depth
+    int misses = 0;
+    for (int row = 0; row < n; row++){
+        for (int col = 0; col < n; col++){
+            if (pos[row][col] != solvedBoard.getPos(row, col))
+                misses++;
+        }
+    }
+    cost = misses + depth;
 }
