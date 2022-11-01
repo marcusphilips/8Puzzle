@@ -23,6 +23,7 @@ private:
     int* blankPos;
     Board* parentNode = nullptr;
     static std::list<Board> history;
+    int countDepth() const;
 public:
     Board(int n);
     Board(int n, const std::string& customBoard);
@@ -44,6 +45,7 @@ public:
     void addThis();
     bool isInHistory() const;
     void printHistory() const;
+    static void clearHistory();
 };
 
 #endif 

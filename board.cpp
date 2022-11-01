@@ -1,5 +1,6 @@
 #include "board.h"
 
+// some nonsense I need to do to use the static list
 std::list<Board> Board::history = std::list<Board> ();
 
 /// @brief  Board represents n by n board with the n*n - 1 numbers and the one-blank piece
@@ -329,26 +330,43 @@ bool Board::operator<(const Board &rhs) const
 void Board::addThis()
 {
     std::list<Board>::iterator it;
-    std::cout << history.size() << std::endl;
     it = std::lower_bound(history.begin(), history.end(), *this);
     history.insert(it, *this);
+    //std::cout << "New history size: " << history.size() << std::endl;
 }
 
 /// @brief Has the Board already been recorded
 /// @return bool is the current Board in the history of the object
 bool Board::isInHistory() const
 {
-    std::list<Board>::iterator it;
-    it = std::lower_bound(history.begin(), history.end(), *this);
-    if (it != history.end())
-        return true;
-    else
-        return false;
+    for(std::list<Board>::iterator it = history.begin(); it != history.end(); it++){
+        if (*it == *this)
+            return true;
+    }
+    return false;
 }
 
 /// @brief prints the history of the choices
 void Board::printHistory() const {
+    std::cout << "Board is at depth " << countDepth() << std::endl;
     std::cout << toString() << std::endl;
     if (parentNode != nullptr)
        parentNode->printHistory();
+}
+
+/// @brief How deep are we? Uses some nice recursion
+/// @return 1 for every null parent node i.e. the depth
+int Board::countDepth() const {
+    if (parentNode == nullptr)
+        return 0;
+    else
+        return 1 + parentNode->countDepth();
+}
+
+/// @brief Clears the history to start over fresh for a new board. Should remove memory leaks; actually
+/// do not mind the memory leaks. They are trivial.
+void Board::clearHistory() {
+    while (!history.empty()){
+        history.pop_back();
+    }
 }
