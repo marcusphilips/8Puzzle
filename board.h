@@ -27,6 +27,7 @@ private:
     int cost = -1; // Sentinel not possible
     int depth = 0;
     void printHistoryHelper() const;
+    static int intAbs(int n);
 
 public:
 
@@ -65,7 +66,7 @@ public:
     int getCost() const;
     std::string toString() const;
 
-    // add history
+    // history
 
     void addThis();
     bool isInHistory() const;

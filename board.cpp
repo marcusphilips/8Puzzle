@@ -183,7 +183,7 @@ int Board::getN() const
 
 /// @brief attempts to move Blank up
 /// @return board pointer did it actually move the blank up null pointer if not
-Board *Board::moveBlankUp() 
+Board *Board::moveBlankUp()
 {
 
     if (blankPos[0] == 0) // if row is 0
@@ -342,7 +342,8 @@ bool Board::operator<(const Board &rhs) const
 /// @param rhs Board whose cost has beeen calculated
 /// @param lhs another Board whose cost has beeen calculated
 /// @return bool whether the LHS's cost is less than RHS's
-bool Board::costLessThan(const Board *rhs, const Board *lhs){
+bool Board::costLessThan(const Board *rhs, const Board *lhs)
+{
     return rhs->cost < lhs->cost;
 }
 
@@ -394,12 +395,14 @@ void Board::clearHistory()
 
 /// @brief Calculates the heuristic with misplaced cost and also counts the depth to see how far the
 /// Board went to calculate for the total cost which the Board object will store
-void Board::misplacedCost() 
+void Board::misplacedCost()
 {
     // find h(n) which is equivalent to depth
     int misses = 0;
-    for (int row = 0; row < n; row++){
-        for (int col = 0; col < n; col++){
+    for (int row = 0; row < n; row++)
+    {
+        for (int col = 0; col < n; col++)
+        {
             if (pos[row][col] != solvedBoard.getPos(row, col))
                 misses++;
         }
@@ -407,12 +410,42 @@ void Board::misplacedCost()
     cost = misses + depth;
 }
 
-void manhattanCost(){
+/// @brief Returns the absolute value of an integer
+/// @param n
+/// @return |n|
+int Board::intAbs(int n)
+{
+    if (n < 0)
+        return -n;
+    else
+        return n;
+}
 
+/// @brief Calculates how many "steps" or the Manhattan distance to the correct spot for each tile in the
+/// Board. Updates the internal cost in the Board object.
+void Board::manhattanCost()
+{
+    int steps = 0;
+    for (int row = 0; row < n; row++)
+    {
+        for (int col = 0; col < n; col++)
+        {
+            if (pos[row][col] == 0)
+                continue;
+            if (pos[row][col] != solvedBoard.getPos(row, col))
+            {
+                int correctRow = (pos[row][col] - 1) / n;
+                int correctCol = (pos[row][col] - 1) % n;
+                steps += intAbs(row - correctRow) + intAbs(col - correctCol);
+            }
+        }
+    }
+    cost = steps + depth;
 }
 
 /// @brief Gets the cost. Does not calculate it!
 /// @return cost of Board in relation to solution
-int Board::getCost() const {
+int Board::getCost() const
+{
     return cost;
 }
