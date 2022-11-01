@@ -339,10 +339,11 @@ bool Board::operator<(const Board &rhs) const
 }
 
 /// @brief Is LHS cost less than rhs?
-/// @param rhs another Board whose cost has beeen calculated
+/// @param rhs Board whose cost has beeen calculated
+/// @param lhs another Board whose cost has beeen calculated
 /// @return bool whether the LHS's cost is less than RHS's
-bool Board::costLessThan(const Board &rhs) const{
-    return cost < rhs.cost;
+bool Board::costLessThan(const Board& rhs, const Board& lhs){
+    return rhs.cost < rhs.cost;
 }
 
 /// @brief Add this Board object to the history of all boards. But in a sorted way to save time

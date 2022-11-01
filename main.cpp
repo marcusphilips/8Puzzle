@@ -103,10 +103,10 @@ int main(int argc, char **argv)
     }
 OUTER_LOOP:
     Board::clearHistory();
-    b = new Board(3, "1 2 3 5 0 6 4 7 8 ");
-    b->misplacedCost();
-    list<Board *> l;
-    l.push_front(b);
+    Board c =  Board(3, "1 2 3 5 0 6 4 7 8 ");
+    c.misplacedCost();
+    list<Board > l;
+    l.push_front(c);
     boards = 0;
     addedToQueue = 0;
     while (true)
@@ -117,18 +117,18 @@ OUTER_LOOP:
             break;
         }
         // read the front
-        if (l.front()->isSolved())
+        if (l.front().isSolved())
         {
             cout << "Found solution Expanded: " << boards
                  << " Added to Queue: " << addedToQueue
                  << " printing history:" << endl;
-            q.front()->printHistory();
+            l.front().printHistory();
             cout << "Solution found. No more expansion." << endl;
             break;
         }
         // expand all directions of the front node
-        list<Board *> l2;
-        Board *up = l.front()->moveBlankUp();
+        list<Board > l2;
+        Board *up = l.front().moveBlankUp();
         if (up != nullptr)
         {
             boards++;
@@ -137,7 +137,7 @@ OUTER_LOOP:
             {
                 up->misplacedCost();
                 addedToQueue++;
-                l2.push_back(up);
+                l2.push_back(*up);
                 up->addThis();
             }
             else
@@ -145,7 +145,7 @@ OUTER_LOOP:
                 delete up; // save some mem
             }
         }
-        Board *down = l.front()->moveBlankDown();
+        Board *down = l.front().moveBlankDown();
         if (down != nullptr)
         {
             boards++;
@@ -153,7 +153,7 @@ OUTER_LOOP:
             {
                 down->misplacedCost();
                 addedToQueue++;
-                l2.push_back(down);
+                l2.push_back(*down);
                 down->addThis();
             }
             else
@@ -161,7 +161,7 @@ OUTER_LOOP:
                 delete down; // save some mem
             }
         }
-        Board *left = l.front()->moveBlankLeft();
+        Board *left = l.front().moveBlankLeft();
         if (left != nullptr)
         {
             boards++;
@@ -169,7 +169,7 @@ OUTER_LOOP:
             {
                 left->misplacedCost();
                 addedToQueue++;
-                l2.push_back(left);
+                l2.push_back(*left);
                 left->addThis();
             }
             else
@@ -177,7 +177,7 @@ OUTER_LOOP:
                 delete left; // save some mem
             }
         }
-        Board *right = l.front()->moveBlankRight();
+        Board *right = l.front().moveBlankRight();
         if (right != nullptr)
         {
             boards++;
@@ -185,7 +185,7 @@ OUTER_LOOP:
             {
                 right->misplacedCost();
                 addedToQueue++;
-                l2.push_back(right);
+                l2.push_back(*right);
                 right->addThis();
             }
             else
@@ -194,13 +194,19 @@ OUTER_LOOP:
             }
         }
         l.pop_front(); // done with this node
-        // sort by cost
-        sort(l2.begin(), l2.end(), Board::costLessThan);
-        // merge assumes both lists are sorted
-        l.merge(l2, Board::costLessThan);
-        for (list<Board*>::iterator it = l.begin(); it != l.end(); it++){
-            
+        if (!l2.empty())
+        {
+            // sort by cost
+            l2.sort(Board::costLessThan);
+            // merge assumes both lists are sorted
+            l.merge(l2, Board::costLessThan);
         }
+        for (list<Board >::iterator it = l.begin(); it != l.end(); it++)
+        {
+            cout << "Cost: " << it->getCost() << '\n'
+                 << it->toString() << endl;
+        }
+        cin.get();
     }
     return 0;
 }

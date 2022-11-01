@@ -45,7 +45,7 @@ public:
 
     bool operator==(const Board &rhs) const;
     bool operator<(const Board &rhs) const;
-    bool costLessThan(const Board &rhs) const;
+    static bool costLessThan(const Board &rhs, const Board &lhs);
 
     // check Board
 
