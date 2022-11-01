@@ -135,6 +135,7 @@ OUTER_LOOP:
             // cout << "Up:\n" << up->toString() << endl;
             if (!up->isInHistory())
             {
+                up->misplacedCost();
                 addedToQueue++;
                 l2.push_back(up);
                 up->addThis();
@@ -150,6 +151,7 @@ OUTER_LOOP:
             boards++;
             if (!down->isInHistory())
             {
+                down->misplacedCost();
                 addedToQueue++;
                 l2.push_back(down);
                 down->addThis();
@@ -165,6 +167,7 @@ OUTER_LOOP:
             boards++;
             if (!left->isInHistory())
             {
+                left->misplacedCost();
                 addedToQueue++;
                 l2.push_back(left);
                 left->addThis();
@@ -180,6 +183,7 @@ OUTER_LOOP:
             boards++;
             if (!right->isInHistory())
             {
+                right->misplacedCost();
                 addedToQueue++;
                 l2.push_back(right);
                 right->addThis();
@@ -188,6 +192,14 @@ OUTER_LOOP:
             {
                 delete right; // save some mem
             }
+        }
+        l.pop_front(); // done with this node
+        // sort by cost
+        sort(l2.begin(), l2.end(), Board::costLessThan);
+        // merge assumes both lists are sorted
+        l.merge(l2, Board::costLessThan);
+        for (list<Board*>::iterator it = l.begin(); it != l.end(); it++){
+            
         }
     }
     return 0;

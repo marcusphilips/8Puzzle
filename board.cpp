@@ -405,3 +405,9 @@ void Board::misplacedCost()
     }
     cost = misses + depth;
 }
+
+/// @brief Gets the cost. Does not calculate it!
+/// @return cost of Board in relation to solution
+int Board::getCost() const {
+    return cost;
+}

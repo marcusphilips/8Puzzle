@@ -62,6 +62,7 @@ public:
 
     int getN() const;
     int getPos(int y, int x) const;
+    int getCost() const;
     std::string toString() const;
 
     // add history
