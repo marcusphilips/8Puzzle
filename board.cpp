@@ -342,8 +342,8 @@ bool Board::operator<(const Board &rhs) const
 /// @param rhs Board whose cost has beeen calculated
 /// @param lhs another Board whose cost has beeen calculated
 /// @return bool whether the LHS's cost is less than RHS's
-bool Board::costLessThan(const Board& rhs, const Board& lhs){
-    return rhs.cost < rhs.cost;
+bool Board::costLessThan(const Board *rhs, const Board *lhs){
+    return rhs->cost < lhs->cost;
 }
 
 /// @brief Add this Board object to the history of all boards. But in a sorted way to save time
@@ -405,6 +405,10 @@ void Board::misplacedCost()
         }
     }
     cost = misses + depth;
+}
+
+void manhattanCost(){
+
 }
 
 /// @brief Gets the cost. Does not calculate it!
