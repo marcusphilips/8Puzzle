@@ -4,22 +4,53 @@
 
 using namespace std;
 
+void printMenu();
 void uniformCost(int n, string &s);
 void misplacedCost(int n, string &s);
 void manhattanCost(int n, string &s);
 
 int main(int argc, char **argv)
 {
+    // Some test boards to use
     // "1 2 3 5 0 6 4 7 8 "
     // "7 1 2 4 8 5 6 3 0 "
     // "1 3 6 5 0 7 4 8 2 "
     // "0 7 2 4 6 1 3 5 8 "
     // "1 6 7 5 0 3 4 8 2 "
-    string txt = "1 6 7 5 0 3 4 8 2 ";
-    manhattanCost(3, txt);
-    misplacedCost(3, txt);
-   // uniformCost(3, txt);
+    string txt = ""; 
+    cout << "Welcome to n*n-1 Puzzle Solver!\n"
+        << "What is the length of your board?\n";
+    int length;
+    cin >> length;
+    while (true){
+        int choice;
+        printMenu();
+        cin >> choice;
+        if (choice == 1){
+            manhattanCost(length, txt);
+        }
+        if (choice == 2){
+            misplacedCost(length, txt);
+        }
+        if (choice == 3){
+            uniformCost(length, txt);
+        }
+        if (choice == 4){
+            cout << "What is the length of your board?\n";
+            cin >> length;
+        }
+    
+    }
+    cout << "Now exiting. Goodbye." << endl;
     return 0;
+}
+
+void printMenu(){
+    cout << "Enter: \n<1> for A* with Manhattan Distance Heuristic\n"
+        << "<2> for A* with Misplaced Tiles Heuristic\n"
+        << "<3> for Uniform Cost Search\n"
+        << "<4> to reenter in another Board\n"
+        << "<5> to quit program" << endl;
 }
 
 void uniformCost(int n, string &s)
