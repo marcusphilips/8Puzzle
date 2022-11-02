@@ -431,7 +431,9 @@ void Board::manhattanCost()
         for (int col = 0; col < n; col++)
         {
             if (pos[row][col] == 0)
-                continue;
+            {
+                steps += (n - 1 - row) + (n - 1 - col);
+            }
             if (pos[row][col] != solvedBoard.getPos(row, col))
             {
                 int correctRow = (pos[row][col] - 1) / n;
