@@ -430,11 +430,15 @@ void Board::manhattanCost()
     {
         for (int col = 0; col < n; col++)
         {
+            // 0 is a weird case
             if (pos[row][col] == 0)
             {
-                steps += (n - 1 - row) + (n - 1 - col);
+                if (n != row - 1 && n != col - 1)
+                    steps += (n - 1 - row) + (n - 1 - col);
             }
-            if (pos[row][col] != solvedBoard.getPos(row, col))
+            // all other numbers can be generalized though so that the distance can be calculated
+            // in O(1)
+            else if (pos[row][col] != solvedBoard.getPos(row, col))
             {
                 int correctRow = (pos[row][col] - 1) / n;
                 int correctCol = (pos[row][col] - 1) % n;
